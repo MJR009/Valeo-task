@@ -1,5 +1,7 @@
 import sys
 import os
+import csv
+import random
 
 def printUsage():
     print("\033[36mUsage: python3 sensor.py <output directory>\033[39m")
@@ -23,14 +25,38 @@ def main():
 def writeCSV(path):
     file = open(path, "w")
 
-    file.write("test")
+    csvHandle = csv.writer(file)
+    csvHandle.writerow(
+        ["Timestamp", "Speed"]
+    )
+
+    timestamp = genTimestamp()
+    currentTS = next(timestamp)
+    speed = genSpeed()
+
+    while currentTS < 160_000_000.0:
+        csvHandle.writerow(
+            [
+                currentTS,
+                next(speed) # done every time - "each time the column Timestamp has a new value"
+            ]
+        )
+        currentTS = next(timestamp)
 
     file.close()
 
-# cols - Timestamp, Speed
+def genTimestamp():
+    timestamp = 100_000_000.0
+    increment = 200_000.0
+    while True:
+        yield round(timestamp, 6)
+        timestamp += increment + random.uniform(-10_000.0, 10_000.0)
 
-# timestamp - float [us], start 100s -> 100 000 000us, increment 200ms ->200 000 us +- 10ms -> 10 000us, 6 decimal places
-#           - (> 160) s -> 160 000 000 us - stop generating
-# speed - float [kmph], start 60 kmph, increment 0.56 kmph every row (<= every new timestamp), when 120 kmph, keep 120 +- 0.1kmph
+def genSpeed():
+    speed = 60.0
+    increment = 0.56
+    while True:
+        yield speed
+        speed = speed + increment if ( speed < 120.0 ) else 120.0 + random.uniform(-0.1, 0.1)
 
 main()

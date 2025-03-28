@@ -39,8 +39,8 @@ def writeCSV(path):
 
     for _ in range(2_000):
         helperID = next(frameID) # helper need _only_ for signals
-        signal1 = 0 if helperID <= 200 else next(signal1_random)
-        signal2 = 0 if signal1 < 5 else 80 + random.randint(-10, 10)
+        signal1 = 0 if ( helperID <= 200 ) else next(signal1_random)
+        signal2 = 0 if ( signal1 < 5 ) else 80 + random.randint(-10, 10)
 
         csvHandle.writerow(
             [
