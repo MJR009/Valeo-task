@@ -33,16 +33,23 @@ def writeCSV(path):
     timestamp = genTimestamp()
     frameID = genFrameID()
     speed = genSpeed()
+    yawRate = genYawRate()
+    signal1_random = getSignal1()
+    signal2 = 0
 
     for _ in range(2_000):
+        helperID = next(frameID) # helper need _only_ for signals
+        signal1 = 0 if helperID <= 200 else next(signal1_random)
+        signal2 = 0 if signal1 < 5 else 80 + random.randint(-10, 10)
+
         csvHandle.writerow(
             [
                 next(timestamp),
-                next(frameID),
+                helperID,
                 next(speed),
-                "",
-                "",
-                ""
+                next(yawRate),
+                signal1,
+                signal2
             ]
         )
 
@@ -69,8 +76,15 @@ def genSpeed():
         speed = speed + increment if ( speed < 120.0 ) else 120.0 + random.uniform(-0.05, 0.05)
         # < used, <= (or ==) on float is invalid
 
-# yawrate - float [°/s], start 0, then in range od +- 1 every frame # per each frame? not english
-# signal1 - int, 0 up to id 200, for > 200 select random from 1 - 15 and keep constant
-# signal2 - signal1 < 5 -> 0; signal1 >= 5 80 +- 10 every frame
+def genYawRate():
+    yawRate = 0.0
+    while True:
+        yield yawRate
+        yawRate = random.uniform(-1.0, 1.0)
+
+def getSignal1():
+    signal1 = random.randint(1, 15)
+    while True:
+        yield signal1
 
 main()
