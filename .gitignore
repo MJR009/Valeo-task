@@ -1,0 +1,6 @@
+*
+!.gitignore
+!README.md
+!f_cam.py
+!resim.py
+!sensor.py
