@@ -2,5 +2,4 @@
 ### Martin Jabůrek
 # Valeo DFC Applied Python Evaluation
 
-<!-- specify location for output csv custom -->
-<!-- main.py - executescripts in order -->
+<!-- main.py - execute scripts in order -->
